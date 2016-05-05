@@ -1,0 +1,10 @@
+---
+- name: ensure libselinux-python is installed
+  yum: name=libselinux-python state=present
+
+- name: configure selinux policy and state
+  selinux: conf={{selinux_config|default('/etc/selinux/config')}} policy={{selinux_policy|default('targeted')}} state={{selinux_state|default('enforcing')}}
+
+- name: toggle selinux booleans
+  seboolean: name={{item.key}} state={{item.value.state|default('yes')}} persistent={{item.value.persistent|default('yes')}}
+  with_dict: "{{selinux_boolean|default({})}}"
