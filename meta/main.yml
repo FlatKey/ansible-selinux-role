@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: FlatKey
-  description: Advanced Base role to configure SELinux through variables. You can configure SELinux policy, state, booleans and ports.
+  description: SELinux configuration through variables
   license: MIT
   min_ansible_version: 2.0
   platforms:
