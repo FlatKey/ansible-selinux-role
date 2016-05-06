@@ -8,6 +8,7 @@ Config options:
 * state
 * booleans
 * ports
+* fcontexts
 
 Requirements
 ------------
@@ -18,6 +19,8 @@ Ansible 2.0 or above
 
 Role Variables
 --------------
+**It is not necessary to use all these variable blocks, you can use only the config options you really need.**
+
 
 The following variables are used to configure SELinux policy and state:
 
@@ -50,6 +53,19 @@ The following variables are used to configure SELinux ports:
         state: (optional, only values: present|absent, default: present)
 ```
 
+---
+
+The following variables are used to configure SELinux fcontexts: 
+
+```
+    selinux_fcontext: 
+      name_of_selinux_fcontext: (your own choice for better documentation in your playbook)
+        file_spec: (required, regular expression to describe affected files)
+        setype: (required, existing selinux type to label the files of your file_spec with it)
+        ftype: (optional, only values: a|b|c|d|f|l|p|s - see manpage semanage-fcontext for file type, default: a - all files)
+        state: (optional, only values: present|absent, default: present)
+```
+
 Example Playbook
 ----------------
 
@@ -78,6 +94,12 @@ Example Playbook
           http_port_t:
             ports: 9000-9004
             protocol: tcp
+            state: present
+        selinux_fcontext:
+          vcloud_documentroot:
+            file_spec: "/srv/www(.*)"
+            setype: httpd_sys_rw_content_t
+            ftype: a
             state: present
 ```
 

@@ -15,3 +15,7 @@
 - name: configure selinux network port definition
   seport: setype={{item.key}} ports={{item.value.ports}} proto={{item.value.protocol|default('tcp')}} state={{item.value.state|default('present')}}
   with_dict: "{{selinux_ports|default({})}}"
+
+- name: configure selinux fcontext
+  shell: /sbin/semanage fcontext {{ '-d' if item.value.state == 'absent' else '-a' }} -f {{item.value.ftype|default('a')}} -t {{item.value.setype}} '{{item.value.file_spec}}'
+  with_dict: "{{selinux_fcontext|default({})}}"
