@@ -7,6 +7,7 @@ Config options:
 * policy
 * state
 * booleans
+* ports
 
 Requirements
 ------------
@@ -37,6 +38,18 @@ The following variables are used to toggle SELinux booleans:
         persistent: (optional, only values: yes|no, default: yes)
 ```
 
+---
+
+The following variables are used to configure SELinux ports: 
+
+```
+    selinux_ports: 
+      name_of_selinux_type:
+        ports: (required, port or port range)
+        protocol: (optional, only values: tcp|udp default: tcp)
+        state: (optional, only values: present|absent, default: present)
+```
+
 Example Playbook
 ----------------
 
@@ -57,6 +70,15 @@ Example Playbook
           httpd_can_sendmail:
             state: yes
             persistent: yes
+        selinux_ports:
+          ssh_port_t:
+            ports: 2222
+            protocol: tcp
+            state: present
+          http_port_t:
+            ports: 9000-9004
+            protocol: tcp
+            state: present
 ```
 
 License
