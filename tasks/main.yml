@@ -31,5 +31,9 @@
   with_dict: "{{ selinux_ports|default({}) }}"
 
 - name: configure selinux fcontext
-  shell: /sbin/semanage fcontext {{ '-d' if item.value.state == 'absent' else '-a' }} -f {{ item.value.ftype|default('a') }} -t {{ item.value.setype }} '{{ item.value.file_spec }}'
+  sefcontext:
+    target: "{{ item.value.file_spec }}"
+    ftype: "{{ item.value.ftype|default('a') }}"
+    setype: "{{ item.value.setype }}"
+    state: "{{ item.value.state }}"
   with_dict: "{{ selinux_fcontext|default({}) }}"
