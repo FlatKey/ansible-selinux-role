@@ -3,17 +3,20 @@
   yum:
     name: libselinux-python
     state: present
+  tags: selinux
 
 - name: ensure policycoreutils-python is installed
   yum:
     name: policycoreutils-python
     state: present
+  tags: selinux
 
 - name: configure selinux policy and state
   selinux:
     conf: "{{ selinux_config|default('/etc/selinux/config') }}"
     policy: "{{ selinux_policy|default('targeted') }}"
     state: "{{ selinux_state|default('enforcing') }}"
+  tags: selinux
 
 - name: toggle selinux booleans
   seboolean:
@@ -21,6 +24,7 @@
     state: "{{ item.value.state|default('yes') }}"
     persistent: "{{ item.value.persistent|default('yes') }}"
   with_dict: "{{ selinux_boolean|default({}) }}"
+  tags: selinux
 
 - name: configure selinux network port definition
   seport:
@@ -29,6 +33,7 @@
     proto: "{{ item.value.protocol|default('tcp') }}"
     state: "{{ item.value.state|default('present') }}"
   with_dict: "{{ selinux_ports|default({}) }}"
+  tags: selinux
 
 - name: configure selinux fcontext
   sefcontext:
@@ -37,3 +42,4 @@
     setype: "{{ item.value.setype }}"
     state: "{{ item.value.state }}"
   with_dict: "{{ selinux_fcontext|default({}) }}"
+  tags: selinux
